@@ -37,3 +37,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+1. git add -A (adds all new & modified files to be staged);
+2. git commit -m "text of commit" (creates a commit);
+3. git push origin main (pushes latest local version of the project to Github repo).
