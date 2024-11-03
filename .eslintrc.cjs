@@ -1,5 +1,4 @@
 /* eslint-env node */
-// require('@rushstack/eslint-patch/modern-module-resolution')
 import '@rushstack/eslint-patch/modern-module-resolution'
 
 module.exports = {
@@ -9,17 +8,11 @@ module.exports = {
     'eslint:recommended',
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
-    // 'plugin:vue/vue3-strongly-recommended'
   ],
   parserOptions: {
     ecmaVersion: 'latest'
   },
   rules: {
-    // 'no-unused-vars': 'off'
-    // 'no-unused-vars': 0 - same as 'off'
-    // 'no-unused-vars': 'warn' - show warning instead of an error
-    // 'no-unused-vars': 1 - same as 'off'
-    // 'no-unused-vars': 'error' - show an error
-    // 'no-unused-vars': 1 - same as 'error'
+    'vue/multi-word-component-names': 0 // although it’s a good rule, but not in our case, while we’re using file-based routing with the "unplugin Vue Router"
   }
 }
