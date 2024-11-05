@@ -14,4 +14,4 @@ create table
 		collaborators text array default array[]::varchar[] not null
 	);
 
-insert into projects (name, slug) values ('project one', 'project-one');
+-- insert into projects (name, slug) values ('project one', 'project-one');
