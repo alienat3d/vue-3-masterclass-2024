@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
+// After we import this file...
+import type { Database } from '../../database/types'
 
 // Create a single supabase client for interacting with your database
 // 1.0 We'll get from https://supabase.com/dashboard/project/... a Project URL & an API key
 // [-> App.vue]
 // 2.1 Let’s do this with the URL & API-key
-export const supabase = createClient(
+// ... we’ll add in Database as type for createClient. But we also have to include this into file 'tsconfig.app.json' into "include array" and then the code editor will know about new types.
+// [-> pages/projects/index.vue]
+export const supabase = createClient<Database>(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_API_KEY
 )

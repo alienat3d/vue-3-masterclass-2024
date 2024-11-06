@@ -33,7 +33,7 @@ const seedProjects = async (numEntries) => {
   logStep('Seeding projects...')
   const projects = []
 
-  for (let index = 0; index < numEntries; index++) {
+  for (let i = 0; i < numEntries; i++) {
     const name = faker.lorem.words(3)
 
     projects.push({
@@ -53,8 +53,35 @@ const seedProjects = async (numEntries) => {
   return data
 }
 
+// 5.1 And we using these IDs in the "project_id" field to randomly select one of those IDs to be the project ID. Or the project linked to that task.
+const seedTasks = async (numEntries, projectsIds) => {
+  logStep('Seeding tasks...')
+  const tasks = []
+
+  for (let i = 0; i < numEntries; i++) {
+    tasks.push({
+      name: faker.lorem.words(3),
+      status: faker.helpers.arrayElement(['in-progress', 'completed']),
+      description: faker.lorem.paragraph(),
+      due_date: faker.date.future(),
+      project_id: faker.helpers.arrayElement(projectsIds),
+      collaborators: faker.helpers.arrayElements([1, 2, 3])
+    })
+  }
+
+  const { data, error } = await supabase.from('tasks').insert(tasks).select('id')
+
+  if (error) return logErrorAndExit('Tasks', error)
+
+  logStep('Tasks seeded successfully.')
+
+  return data
+}
+
+// 5.0 So as addition we have now here seedTasks() function and we’re returning the projectsIds by the seedProjects() function and we’re mapping over them to have an array of project IDs only. Then we’re passing these to seedTasks() function. ↑
 const seedDatabase = async (numEntriesPerTable) => {
-  await seedProjects(numEntriesPerTable)
+  const projectsIds = (await seedProjects(numEntriesPerTable)).map((project) => project.id)
+  await seedTasks(numEntriesPerTable, projectsIds)
 }
 
 const numEntriesPerTable = 10

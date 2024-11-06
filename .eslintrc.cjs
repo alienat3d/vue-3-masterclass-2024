@@ -13,6 +13,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    'vue/multi-word-component-names': 0 // although it’s a good rule, but not in our case, while we’re using file-based routing with the "unplugin Vue Router"
+    'vue/multi-word-component-names': 0
+    // although it’s a good rule, but not in our case, while we’re using file-based routing with the "unplugin Vue Router"
   }
 }
