@@ -10,7 +10,16 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [VueRouter(), vue()],
+  plugins: [
+    VueRouter(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: element => element.startsWith('iconify-icon') // we tell to Vue, if you notice the element starts with 'iconify-icon' know it’s a custom element and don’t throw an error
+        }
+      }
+    })
+  ],
   css: {
     postcss: {
       plugins: [tailwind(), autoprefixer()]

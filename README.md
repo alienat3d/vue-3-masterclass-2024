@@ -43,3 +43,5 @@ npm run lint
 3. git push origin main (pushes latest local version of the project to Github repo).
 
 [Master Repo](https://github.com/vueschool/vuejs-masterclass-2024-edition/)
+
+[![wakatime](https://wakatime.com/badge/user/f37ab12b-d024-4d9e-ae52-28518e6bcaf7/project/b0d57c59-9c5e-4bed-b9f6-b8b66ed14bcf.svg)](https://wakatime.com/badge/user/f37ab12b-d024-4d9e-ae52-28518e6bcaf7/project/b0d57c59-9c5e-4bed-b9f6-b8b66ed14bcf)
