@@ -5,6 +5,7 @@ import { h, ref } from 'vue'
 import DataTable from '@/components/ui/data-table/DataTable.vue'
 import type { Tables } from '../../../database/types'
 import type { ColumnDef } from '@tanstack/vue-table'
+import { RouterLink } from 'vue-router'
 
 const tasks = ref<Tables<'tasks'>[] | null>(null)
 
@@ -63,12 +64,22 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
 // 6.3 Let’s see what’s the first column we want to display, it’s a column with the name of the task. And for the accessorKey we’ll write 'name', same as the header should display 'Name'. We won’t need that logic from example above, we just need to return the value from 'name' property with row.getValue() func. We also change styles a little bit, so that the text pushed to the left.
 // 6.5 And let’s do the same for each property/column of our data.
 // 6.6 Looks good except for 'collaborators' column, which need some fix with JSON.stringify() method.
+
+// 8.4 We'll change path a little bit, so it leads to task with the task id user just clicked on. And now we’ll need to create also [id].vue component.
+// Go to [ [id].vue ]
 const columns: ColumnDef<Tables<'tasks'>>[] = [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
     cell: ({ row }) => {
-      return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
+      return h(
+        RouterLink,
+        {
+          to: `/tasks/${row.original.id}`,
+          class: 'text-left font-medium block w-full hover:bg-muted'
+        },
+        () => row.getValue('name')
+      )
     }
   },
   {
