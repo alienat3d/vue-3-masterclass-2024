@@ -63,6 +63,7 @@ const table = useVueTable({
   </div>
 </template>
 
+<!-- 8.2 In order to make nicer hover effect making the background color for all width & height of the element we have to remove paddings from the td elements first and add it to any child elements inside of it. -->
 <style scoped>
 td {
   @apply p-0;
