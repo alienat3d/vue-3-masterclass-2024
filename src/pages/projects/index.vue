@@ -1,10 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import { h, ref } from 'vue'
 import type { Tables } from '../../../database/types'
 import type { ColumnDef } from '@tanstack/vue-table'
-import DataTable from 'comments/5-alt-way-rendering-tables-with-slots/components/ui/data-table/DataTable copy.vue'
+import DataTable from '@/components/ui/data-table/DataTable.vue'
 import { RouterLink } from 'vue-router'
 
 const projects = ref<Tables<'projects'>[] | null>(null)

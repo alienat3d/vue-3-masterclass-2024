@@ -2,6 +2,8 @@ import vue from '@vitejs/plugin-vue'
 
 import { fileURLToPath, URL } from 'node:url'
 import VueRouter from 'unplugin-vue-router/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
+import AutoImport from 'unplugin-auto-import/vite'
 
 import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
@@ -18,6 +20,17 @@ export default defineConfig({
           isCustomElement: element => element.startsWith('iconify-icon') // we tell to Vue, if you notice the element starts with 'iconify-icon' know it’s a custom element and don’t throw an error
         }
       }
+    }),
+    AutoImport({
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+        /\.md$/ // .md
+      ],
+      imports: ['vue', VueRouterAutoImports],
+      dts: true,
+      viteOptimizeDeps: true
     })
   ],
   css: {
