@@ -1,3 +1,4 @@
+<!-- [ src\components\ui\data-table\DataTable.vue ] -->
 <script setup lang="ts" generic="TData, TValue">
 import type { ColumnDef } from '@tanstack/vue-table'
 import {
@@ -79,7 +80,7 @@ const table = useVueTable({
     </Table>
   </div>
 </template>
-<!-- 
+<!--
 <style scoped>
 td {
   @apply p-0;

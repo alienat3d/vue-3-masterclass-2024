@@ -1,3 +1,4 @@
+// [ database\seed.js ]
 // Now we can use any Object with dot notation from [Faker JS API reference](https://fakerjs.dev/api/)
 // import { faker } from "@faker-js/faker"
 // Or we can do faker even in different language:

@@ -1,3 +1,4 @@
+// [ database\seed.js ]
 import { fakerEN_US as faker } from "@faker-js/faker"
 import { createClient } from '@supabase/supabase-js'
 

@@ -1,3 +1,4 @@
+<!-- [ src\pages\tasks\[id].vue ] -->
 <script setup lang="ts"></script>
 
 <!-- 8.5 -->

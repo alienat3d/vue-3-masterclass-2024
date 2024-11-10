@@ -1,7 +1,8 @@
+<!-- [ src\pages\tasks\index.vue ] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '../../../database/types'
+import type { Tables } from '../../database/types'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { RouterLink } from 'vue-router'
 

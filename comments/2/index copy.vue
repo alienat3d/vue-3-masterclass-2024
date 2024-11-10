@@ -1,3 +1,4 @@
+<!--[ src\pages\projects\index.vue ]-->
 <script setup lang="ts">
 // 5.0 Let’s display projects from DB on the page
 // 5.1 Similar to inserting data we use method "from" to define which table we want to interact with, but we’ll use "select" method in the end to return the data. And it looks like this returns an object that has two properties "data" & "error".

@@ -1,3 +1,4 @@
+<!-- [ src\components\Layout\SidebarLinks.vue ] -->
 <script setup lang="ts">
 // 1.1 Let’s draw an image of how the link would look like. We’ll define an interface "linkProp" which describes all the characteristics of the linkProp, so any link should look like that, what we’ll define here.
 interface LinkProp {

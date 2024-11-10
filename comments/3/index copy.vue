@@ -1,9 +1,10 @@
+<!-- [ src\pages\projects\index.vue ] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
 import { ref } from 'vue'
 // 2.2 We also need to import the type from that new file we just generated and it’s called Tables.
-import type { Tables } from '../../../../database/types'
+import type { Tables } from '../../database/types'
 
 // 1.0 Now we need to store the data somewhere to be able to reference it inside the template and display it in the browser. Let’s create a variable "projects" for this and define it with type of any.
 // let projects: any

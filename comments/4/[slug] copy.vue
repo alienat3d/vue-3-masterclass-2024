@@ -1,3 +1,4 @@
+<!-- [ src\pages\projects\[slug].vue ] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
