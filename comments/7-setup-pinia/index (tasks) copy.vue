@@ -1,24 +1,29 @@
+<!-- [ src\pages\tasks\index.vue ] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '../../../database/types'
+import type { Tables } from '../../database/types'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { RouterLink } from 'vue-router'
+// import { usePageStore } from '@/stores/page'
 
-usePageStore().pageData.title = 'Projects'
+// 1.9.3 And also here with the Tasks page.
+// Go to [ src\components\Layout\main\AuthLayout.vue ]
+usePageStore().pageData.title = 'My Tasks'
 
-const projects = ref<Tables<'projects'>[] | null>(null)
+const tasks = ref<Tables<'tasks'>[] | null>(null)
 
-const getProjects = async () => {
-  const { data, error } = await supabase.from('projects').select()
+const getTasks = async () => {
+  const { data, error } = await supabase.from('tasks').select()
 
   if (error) console.log(error)
 
-  projects.value = data
+  tasks.value = data
 }
-await getProjects()
 
-const columns: ColumnDef<Tables<'projects'>>[] = [
+await getTasks()
+
+const columns: ColumnDef<Tables<'tasks'>>[] = [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
@@ -26,7 +31,7 @@ const columns: ColumnDef<Tables<'projects'>>[] = [
       return h(
         RouterLink,
         {
-          to: `/projects/${row.original.slug}`,
+          to: `/tasks/${row.original.id}`,
           class: 'text-left font-medium block w-full hover:bg-muted'
         },
         () => row.getValue('name')
@@ -38,6 +43,20 @@ const columns: ColumnDef<Tables<'projects'>>[] = [
     header: () => h('div', { class: 'text-center' }, 'Status'),
     cell: ({ row }) => {
       return h('div', { class: 'text-center font-medium' }, row.getValue('status'))
+    }
+  },
+  {
+    accessorKey: 'due_date',
+    header: () => h('div', { class: 'text-center' }, 'Due Date'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-center font-medium' }, row.getValue('due_date'))
+    }
+  },
+  {
+    accessorKey: 'project_id',
+    header: () => h('div', { class: 'text-center' }, 'Project'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-center font-medium' }, row.getValue('project_id'))
     }
   },
   {
@@ -55,5 +74,5 @@ const columns: ColumnDef<Tables<'projects'>>[] = [
 </script>
 
 <template>
-  <DataTable v-if="projects" :columns="columns" :data="projects" />
+  <DataTable v-if="tasks" :columns="columns" :data="tasks" />
 </template>

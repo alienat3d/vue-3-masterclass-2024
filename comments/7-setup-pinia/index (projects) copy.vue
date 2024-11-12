@@ -1,10 +1,14 @@
+<!-- [ src\pages\projects\index.vue ] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '../../../database/types'
+import type { Tables } from '../../database/types'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { RouterLink } from 'vue-router'
+// import { usePageStore } from '@/stores/page'
 
+// 1.9.2 We’ll do the same as before here with different title.
+// Go to [src\pages\tasks\index.vue]
 usePageStore().pageData.title = 'Projects'
 
 const projects = ref<Tables<'projects'>[] | null>(null)
