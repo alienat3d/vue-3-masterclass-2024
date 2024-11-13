@@ -27,3 +27,19 @@ export const projectQuery = (slug: string) =>
     )
     .eq('slug', slug)
     .single()
+
+export const taskQuery = (id: string) =>
+  supabase
+    .from('tasks')
+    .select(
+      `
+        *,
+        projects (
+          "id",
+          "name",
+          "slug"
+        )
+      `
+    )
+    .eq('id', id)
+    .single()
