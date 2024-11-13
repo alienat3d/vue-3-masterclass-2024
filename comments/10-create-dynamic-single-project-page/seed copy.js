@@ -1,3 +1,4 @@
+// [ database\seed.js ]
 import { fakerEN_US as faker } from "@faker-js/faker"
 import { createClient } from '@supabase/supabase-js'
 
@@ -17,6 +18,10 @@ const logStep = (stepMessage) => {
   console.log(stepMessage);
 }
 
+// 3.2.1 Now we’ll add description also in the func that seeds our DB with fish data. We’ll use faker’s method 'paragraphs' and let it create two paragraphs for us.
+// 3.3 Next we run in console one by one following commands, as we need to re-seed the DB and update types: 'npm run db:reset', 'npm run db:seed', 'npm run supabase:types'.
+// 3.4 After this have been done we can get back to our individual project page.
+// Go to [ src\pages\projects\[slug].vue ]
 const seedProjects = async (numEntries) => {
   logStep('Seeding projects...')
   const projects = []
