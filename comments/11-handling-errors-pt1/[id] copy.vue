@@ -1,18 +1,40 @@
+<!-- [src\pages\tasks\[id].vue] -->
+<script setup lang="ts">
+import type { Task } from '@/types/supabaseTypes'
+import { taskQuery } from '@/utils/supabaseQueries'
+
+const route = useRoute('/tasks/[id]')
+
+const task = ref<Task | null>(null)
+
+watch(
+  () => task.value?.name,
+  () => {
+    usePageStore().pageData.title = `Task: ${task.value?.name || ''}`
+  }
+)
+
+// 4.20 Now, when everything ready and tested we can add it also here for the individual task. (Not to forget to destruct 'status' as well) And we’ll do the same with for projects and individual project scripts. [src\pages\projects\[slug].vue, src\pages\projects\index.vue]
+const getTask = async () => {
+  const { data, error, status } = await taskQuery(route.params.id)
+
+  if (error) useErrorStore().setError({ error, customCode: status })
+
+  task.value = data
+}
+
+await getTask()
+</script>
+
 <template>
-  <Table>
+  <Table v-if="task">
     <TableRow>
       <TableHead> Name </TableHead>
-      <TableCell> Lorem ipsum dolor sit amet. </TableCell>
+      <TableCell> {{ task.name }} </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
-      <TableCell>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad iure qui tempora ex nihil, ab
-        reprehenderit dolorem sunt veritatis perferendis? Repudiandae quis velit quasi ab natus quia
-        ratione voluptas deserunt labore sed distinctio nam fuga fugit vero voluptates placeat
-        aperiam, saepe excepturi eos harum consectetur doloremque perspiciatis nesciunt! Incidunt,
-        modi.
-      </TableCell>
+      <TableCell> {{ task.description }} </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Assignee </TableHead>
@@ -20,11 +42,11 @@
     </TableRow>
     <TableRow>
       <TableHead> Project </TableHead>
-      <TableCell> Lorem ipsum. </TableCell>
+      <TableCell> {{ task.projects?.name }} </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>In progress</TableCell>
+      <TableCell> {{ task.status }} </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>
@@ -32,8 +54,8 @@
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="n in 5"
-            :key="n"
+            v-for="collab in task.collaborators"
+            :key="collab"
           >
             <RouterLink class="w-full h-full flex items-center justify-center" to="">
               <AvatarImage src="" alt="" />
