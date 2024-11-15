@@ -1,6 +1,0 @@
-[Tasks]:
-	- define a ref to store the task data; @done
-	- write the function to fetch the task; @done
-	- setting up the supabase query and define the query type; @done
-	- use watch to update the page title; @done
-	- update the template with the fetched data; @done

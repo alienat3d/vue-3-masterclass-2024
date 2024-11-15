@@ -38,6 +38,12 @@ npm run build
 npm run lint
 ```
 
+### Compile and Run the Production Version of the App
+
+```sh
+npm run preview
+```
+
 1. git add -A (adds all new & modified files to be staged);
 2. git commit -m "text of commit" (creates a commit);
 3. git push origin main (pushes latest local version of the project to Github repo).

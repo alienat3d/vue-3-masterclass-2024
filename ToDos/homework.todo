@@ -1,0 +1,2 @@
+[Tasks]:
+	- for JS errors add also stack for easier finds where the error coming from
