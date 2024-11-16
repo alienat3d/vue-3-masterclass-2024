@@ -1,4 +1,6 @@
+<!-- [src\pages\login.vue] -->
 <!-- eslint-disable vue/multi-word-component-names -->
+<!-- 3.1 Let’s create a variable ref for collecting data, like we did in the register page. -->
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
 
@@ -9,6 +11,8 @@ const formData = ref({
 
 const router = useRouter()
 
+// 3.3 Also we’ll need an async func 'signin' and we’ll use the here Supabase client again in order to sign the user with the password. And use its 'auth.signInWithPassword' method to sign-in with the password and pass to it an object with the properties of email and password, which we need to sign the use in.
+// 3.5 And then we have to redirect the user to the homepage if he successfully logged in.
 const signin = async () => {
   const { error } = await supabase.auth.signInWithPassword({
     email: formData.value.email,
@@ -33,6 +37,8 @@ const signin = async () => {
           <Button variant="outline" class="w-full"> Register with Google </Button>
           <Separator label="Or" />
         </div>
+        <!-- 3.2 Then we use v-model to bind the inputs to reactive props. -->
+        <!-- 3.4 We’ll hang our new func for signing-in on the 'submit' event for the form. -->
         <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
