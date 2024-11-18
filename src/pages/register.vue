@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import { supabase } from '@/lib/supabaseClient'
+import { register } from '@/utils/supabaseAuth'
 
 const formData = ref({
   username: '',
@@ -14,24 +14,13 @@ const formData = ref({
 const router = useRouter()
 
 const signup = async () => {
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.value.email,
-    password: formData.value.password
-  })
+  // 4.7 And now we can use here register func that we just created.
+  // Go to [src\utils\supabaseAuth.ts]
+  // 4.10 Let’s store our register func into constant isRegistered. And if it will return true, then we can use isRegistered value to check if register is succeeded. Then we can use router’s method push like we did before.
+  // Go to [src\utils\supabaseAuth.ts]
+  const isRegistered = await register(formData.value)
 
-  if (error) return console.log(error)
-
-  if (data.user) {
-    const { error } = await supabase.from('profiles').insert({
-      id: data.user.id,
-      username: formData.value.username,
-      full_name: formData.value.firstName.concat(' ', formData.value.lastName)
-    })
-
-    if (error) console.log('Profiles err: ', error)
-  }
-
-  router.push('/')
+  if (isRegistered) router.push('/')
 }
 </script>
 
