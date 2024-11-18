@@ -1,3 +1,4 @@
+<!-- [src\pages\register.vue] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { register } from '@/utils/supabaseAuth'
@@ -14,6 +15,10 @@ const formData = ref({
 const router = useRouter()
 
 const signup = async () => {
+  // 4.7 And now we can use here register func that we just created.
+  // Go to [src\utils\supabaseAuth.ts]
+  // 4.10 Let’s store our register func into constant isRegistered. And if it will return true, then we can use isRegistered value to check if register is succeeded. Then we can use router’s method push like we did before.
+  // Go to [src\utils\supabaseAuth.ts]
   const isRegistered = await register(formData.value)
 
   if (isRegistered) router.push('/')

@@ -1,4 +1,7 @@
+<!-- [src\pages\login.vue] -->
 <!-- eslint-disable vue/multi-word-component-names -->
+<!-- 1.0 Let’s clean up register & login page components and create a single file where we put all the funcs which needed for user authentication 'supabaseAuth.vue'. -->
+<!-- Go to [src\utils\supabaseAuth.ts] -->
 <script setup lang="ts">
 import { login } from '@/utils/supabaseAuth'
 
@@ -10,6 +13,13 @@ const formData = ref({
 const router = useRouter()
 
 const signin = async () => {
+  // const { error } = await supabase.auth.signInWithPassword({
+  //   email: formData.value.email,
+  //   password: formData.value.password
+  // })
+
+  // if (error) return console.log(error)
+
   const isLoggedIn = await login(formData.value)
 
   if (isLoggedIn) router.push('/')
