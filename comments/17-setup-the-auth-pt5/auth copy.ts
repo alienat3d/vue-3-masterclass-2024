@@ -1,3 +1,4 @@
+// [src\stores\auth.ts]
 import { supabase } from '@/lib/supabaseClient'
 import { profileQuery } from '@/utils/supabaseQueries'
 import type { Session, User } from '@supabase/supabase-js'
@@ -19,6 +20,8 @@ export const useAuthStore = defineStore('auth-store', () => {
     }
   }
 
+  // 4.2 setAuth should empty the user and also the profile states, so let’s add profile here as well. So when we call the setAuth method and don’t pass a userSession it will empty user & profile states.
+  // Go to [src\components\Layout\Sidebar.vue]
   const setAuth = async (userSession: null | Session = null) => {
     if (!userSession) {
       user.value = null
