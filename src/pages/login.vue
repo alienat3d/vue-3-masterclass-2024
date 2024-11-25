@@ -7,12 +7,27 @@ const formData = ref({
   password: ''
 })
 
+// 6.3 Next, we’ll create a local state for an error.
+const _error = ref('')
+
 const router = useRouter()
 
+// * 6.0 Let’s do the validation checks for the sign-in form. We have already a func for signing in users, but so far it provides no any feedback if the user inserted the wrong data in the fields. What we can do are two options: 1) We wait until that form is submitted and then this func is triggered. And then we can get the error from [src\utils\supabaseAuth.ts] login func and use this error and render it to the user to give him feedback about what went wrong; 2) We can watch what is user currently typing on the field and we show an instant feedback even before the form been submitted. We’ll look at both of them.
+// Go to [src\utils\supabaseAuth.ts]
+// 6.2 Here we’ll destruct an error and redirect user to the homepage only if there is no any error. ↑
 const signin = async () => {
-  const isLoggedIn = await login(formData.value)
+  /*   const isLoggedIn = await login(formData.value)
 
-  if (isLoggedIn) router.push('/')
+  if (isLoggedIn) router.push('/') */
+  const { error } = await login(formData.value)
+
+  if (!error) return router.push('/')
+
+  // 6.4 So if the check above fails we assign those error variable ref with the error message we got from Supabase. ↓
+  // 6.7 We can do even better and change the 'Invalid credentials' error message to a custom one and if we have something different, then just show that message.
+  // _error.value = error.message
+  _error.value =
+    error.message === 'Invalid login credentials' ? 'Incorrect email or password' : error.message
 }
 </script>
 
@@ -28,6 +43,7 @@ const signin = async () => {
           <Button variant="outline" class="w-full"> Register with Google </Button>
           <Separator label="Or" />
         </div>
+        <!-- 6.6 And it would be good to add some classes to the input fields too, so the borders turn red, when we got an error. ↑ -->
         <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
@@ -36,6 +52,7 @@ const signin = async () => {
               placeholder="johndoe19@example.com"
               required
               v-model="formData.email"
+              :class="{ 'border-red-500': _error }"
             />
           </div>
           <div class="grid gap-2">
@@ -49,8 +66,13 @@ const signin = async () => {
               autocomplete
               required
               v-model="formData.password"
+              :class="{ 'border-red-500': _error }"
             />
           </div>
+          <!-- 6.5 And let’s create an element, which will show an error. We’ll put the _error variable ref inside of it. And of course we’ll need "v-if" to show it only in case, if we need an error. ↑ -->
+          <ul v-if="_error" class="text-sm text-left text-red-500">
+            <li class="list-disc">{{ _error }}</li>
+          </ul>
           <Button type="submit" class="w-full"> Login </Button>
         </form>
         <div class="mt-4 text-sm text-center">
