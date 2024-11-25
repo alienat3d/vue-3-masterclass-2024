@@ -48,6 +48,8 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (isTrackingAuthChanges.value) return
 
     isTrackingAuthChanges.value = true
+    // * 4.0 Although everything seems working we’ve created a bug here, as by logging in or by signing out the redirection will be triggered only by second click on the button and not instantly as awaited. And if we do the hard refresh we’ll be also will be redirected back to the login page. And the problem is with timing. As we are relying on the 'onAuthStateChange' callback in order to trigger the setAuth and update the store value.
+    // Go to [src\router\index.ts]
     supabase.auth.onAuthStateChange((event, session) => {
       setTimeout(async () => {
         await setAuth(session)
