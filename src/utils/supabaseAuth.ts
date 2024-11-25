@@ -39,6 +39,8 @@ export const login = async (formData: LoginForm) => {
   return true
 }
 
+// 2.6 When the user is logged out this func will return 'true'.
+// Go to [src\components\Layout\Sidebar.vue]
 export const logout = async () => {
   const { error } = await supabase.auth.signOut()
 
