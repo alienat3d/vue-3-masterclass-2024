@@ -4,8 +4,8 @@ import type { Session, User } from '@supabase/supabase-js'
 import type { Tables } from 'database/types'
 
 export const useAuthStore = defineStore('auth-store', () => {
-  const user = ref<null | User>()
-  const profile = ref<null | Tables<'profiles'>>()
+  const user = ref<null | User>(null)
+  const profile = ref<null | Tables<'profiles'>>(null)
   const isTrackingAuthChanges = ref(false)
 
   const setProfile = async () => {
@@ -13,8 +13,13 @@ export const useAuthStore = defineStore('auth-store', () => {
       profile.value = null
       return
     }
+    // 1.7 So instead of passing the 'user.value.id' we’ll pass the object and say that the column property is the 'id' and the value property is the 'user.value.id'.
+    // Go to [src\pages\users\[username].vue]
     if (!profile.value || profile.value.id !== user.value.id) {
-      const { data } = await profileQuery(user.value.id)
+      const { data } = await profileQuery({
+        column: 'id',
+        value: user.value.id
+      })
 
       profile.value = data || null
     }
@@ -33,8 +38,7 @@ export const useAuthStore = defineStore('auth-store', () => {
 
   const getSession = async () => {
     const { data } = await supabase.auth.getSession()
-
-    if (data.session?.user) setAuth(data.session)
+    if (data.session?.user) await setAuth(data.session)
   }
 
   const trackAuthChanges = () => {
