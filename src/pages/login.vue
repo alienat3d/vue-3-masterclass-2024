@@ -63,6 +63,8 @@ const signin = async () => {
             <!-- *[2.4] @input="handleLoginForm(formData)" ↑ -->
             <!-- 1.21 And let’s past the same HTML block for the email as we did for password already. -->
             <!-- ? 2.8 We could also extract this errors HTML block to reusable component and make errors look more fancy. -->
+            <!-- * 3.0 While we were busy working on validation we lost the type support for the realtimeErrors variable ref along the way. Typescript doesn’t know any of what type realtimeErrors has. If we hover over it, it says that it’s a ref with type of any and it makes sense according to our implementation. -->
+            <!-- Go to [src\composables\formErrors.ts] -->
             <ul v-if="realtimeErrors?.email.length" class="text-sm text-left text-red-500">
               <li v-for="error in realtimeErrors.email" :key="error" class="list-disc">
                 {{ error }}
