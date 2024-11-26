@@ -1,4 +1,6 @@
+// [database\seed.js]
 /* eslint-env node */
+
 import { fakerEN_US as faker } from '@faker-js/faker'
 import { createClient } from '@supabase/supabase-js'
 
@@ -6,7 +8,7 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
   process.env.SERVICE_ROLE_KEY
 )
-
+// * 5.0 A variable testingUserEmail set to environment variable TESTING_USER_EMAIL. Checks if there is a user email in the .env.example
 const testingUserEmail = process.env.TESTING_USER_EMAIL
 if (!testingUserEmail) {
   console.error('Have you forgot to add TESTING_USER_EMAIL to your .env file?')
@@ -23,7 +25,7 @@ const logErrorAndExit = (tableName, error) => {
 const logStep = (stepMessage) => {
   console.log(stepMessage)
 }
-
+// 5.1 Checks if the primary user already exists, which is the user we insert into env. variable. And also creating if it doesn’t exist.
 const PrimaryTestUserExists = async () => {
   logStep('Checking if primary test user exists...')
   const { data, error } = await supabase
@@ -106,7 +108,8 @@ const seedProjects = async (numEntries, userId) => {
 
   return data
 }
-
+// 5.2 We make sure that every task belongs to user. So we add "profile_id: userId", which is a new column to the tasks table. Which also means we have to modify tasks sql schema as well.
+// Go to [supabase\migrations\20241106075826_tasks-schema.sql]
 const seedTasks = async (numEntries, projectsIds, userId) => {
   logStep('Seeding tasks...')
   const tasks = []

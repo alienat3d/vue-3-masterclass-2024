@@ -2,42 +2,19 @@
 <script setup lang="ts">
 import { login } from '@/utils/supabaseAuth'
 
-const formData = ref({
-  email: '',
-  password: ''
-})
+const formData = ref({ email: '', password: '' })
 
-// 7.8 As we added composables dir to [vite.config.ts] we don’t have to import it here, but still we need to initialize it in the script setup or inside of setup func. Sometimes we can use them in the life cycle hooks, but for now we will need to initialize it on a top level. And we’ll destruct from useFormErrors the properties we were returning.
-const { serverError, handleServerError } = useFormErrors()
-
-// 6.3 Next, we’ll create a local state for an error.
-// 7.3 Let’s cut this and past to our composable.
-// Go to [src\composables\formErrors.ts]
-// const _error = ref('')
+// 1.18 We’ll need to destruct those new variable ref & func here
+const { serverError, handleServerError, realtimeErrors, handleLoginForm } = useFormErrors()
 
 const router = useRouter()
 
-// * 6.0 Let’s do the validation checks for the sign-in form. We have already a func for signing in users, but so far it provides no any feedback if the user inserted the wrong data in the fields. What we can do are two options: 1) We wait until that form is submitted and then this func is triggered. And then we can get the error from [src\utils\supabaseAuth.ts] login func and use this error and render it to the user to give him feedback about what went wrong; 2) We can watch what is user currently typing on the field and we show an instant feedback even before the form been submitted. We’ll look at both of them.
-// Go to [src\utils\supabaseAuth.ts]
-// 6.2 Here we’ll destruct an error and redirect user to the homepage only if there is no any error. ↑
-// 7.9 And now we can use it right here if we have an error
 const signin = async () => {
-  /*   const isLoggedIn = await login(formData.value)
-
-  if (isLoggedIn) router.push('/') */
   const { error } = await login(formData.value)
 
   if (!error) return router.push('/')
 
   handleServerError(error)
-
-  // 6.4 So if the check above fails we assign those error variable ref with the error message we got from Supabase. ↓
-  // 6.7 We can do even better and change the 'Invalid credentials' error message to a custom one and if we have something different, then just show that message.
-  // _error.value = error.message
-  // 7.4 Let’s also move this ternary to the composable.
-  // Go to [src\composables\formErrors.ts]
-  // _error.value =
-  //   error.message === 'Invalid login credentials' ? 'Incorrect email or password' : error.message
 }
 </script>
 
@@ -53,17 +30,25 @@ const signin = async () => {
           <Button variant="outline" class="w-full"> Register with Google </Button>
           <Separator label="Or" />
         </div>
-        <!-- 6.6 And it would be good to add some classes to the input fields too, so the borders turn red, when we got an error. ↑ -->
         <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
+            <!-- 1.22 As for handleLoginForm we can listen to the user as he start of using input. So we need 'input' event listener and pass to it this func with the 'formData'. -->
+            <!-- * 2.0 For better UX we want that handleLoginForm func triggering only after the user stops typing in, so that our script won’t attack him with the errors as he just starts of typing. That’s the perfect spot for Debouncing. It’s a technique to control how often a func runs in a response to user interaction. And instead of handling this manually and implementing this all over again using JS, we can get a help from external package. Let’s install first the package using following command: 'npm i @vueuse/core'. This package includes a lot of composable we can use and save a lot of time like with Debounce now. -->
             <Input
               type="email"
               placeholder="johndoe19@example.com"
               required
               v-model="formData.email"
               :class="{ 'border-red-500': serverError }"
+              @input="handleLoginForm(formData)"
             />
+            <!-- 1.21 And let’s past the same HTML block for the email as we did for password already. -->
+            <ul v-if="realtimeErrors?.email.length" class="text-sm text-left text-red-500">
+              <li v-for="error in realtimeErrors.email" :key="error" class="list-disc">
+                {{ error }}
+              </li>
+            </ul>
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
@@ -78,8 +63,14 @@ const signin = async () => {
               v-model="formData.password"
               :class="{ 'border-red-500': serverError }"
             />
+            <!-- 1.19 So let’s sort out the HTML and add some elements, where our errors will be rendered. We’ll use the same ul>li, as we did before and place it right after the input. And they should be displayed only if 'realtimeErrors' has something. And we’ll use the "?" as it can be undefined (before user started to type anything to it, as we didn’t assigned any default value to that variable ref). And we also add '.length' to make sure that there is something in the array. -->
+            <ul v-if="realtimeErrors?.password.length" class="text-sm text-left text-red-500">
+              <!-- 1.20 And here instead of just rendering an error we can use the "v-for" and look over every error inside of the 'realtimeErrors.password' array. And set :key to an actual error, since it’s just a string. And lastly render error inside of each item. -->
+              <li v-for="error in realtimeErrors.password" :key="error" class="list-disc">
+                {{ error }}
+              </li>
+            </ul>
           </div>
-          <!-- 6.5 And let’s create an element, which will show an error. We’ll put the _error variable ref inside of it. And of course we’ll need "v-if" to show it only in case, if we need an error. ↑ -->
           <ul v-if="serverError" class="text-sm text-left text-red-500">
             <li class="list-disc">{{ serverError }}</li>
           </ul>

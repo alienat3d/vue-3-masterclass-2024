@@ -1,8 +1,10 @@
+// [src\stores\auth.ts]
 import { supabase } from '@/lib/supabaseClient'
 import { profileQuery } from '@/utils/supabaseQueries'
 import type { Session, User } from '@supabase/supabase-js'
 import type { Tables } from 'database/types'
 
+// 1.7.1 So let’s create the private state isTrackingAuthChanges with the default value of false.
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>()
   const profile = ref<null | Tables<'profiles'>>()
@@ -20,6 +22,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     }
   }
 
+  // 1.4.0 So the setAuth method will check if we have any user session and if didn’t — it will empty out the user and the profile states.
   const setAuth = async (userSession: null | Session = null) => {
     if (!userSession) {
       user.value = null
@@ -27,6 +30,8 @@ export const useAuthStore = defineStore('auth-store', () => {
       return
     }
 
+    // 1.4.1 But if it does, it will update the profile and the user states.
+    // Go to [src\App.vue]
     user.value = userSession.user
     await setProfile()
   }
@@ -37,10 +42,15 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (data.session?.user) setAuth(data.session)
   }
 
+  // 1.5.1 And inside of auth store create another func 'trackAuthChanges'. So this func will use the supabaseClient. And we can get rid of useAuthstore(), as we can reach out directly to the setAuth method. And not to forget returning that func.
+  // Go to [src\App.vue]
+  // 1.7.0 To be on a safe side we’ll need to subscribe for listening to those events only once in the application. So we’ll make a check with conditional. So if isTrackingAuthChanges is true, don’t subscribe again. ↑
   const trackAuthChanges = () => {
     if (isTrackingAuthChanges.value) return
 
     isTrackingAuthChanges.value = true
+    // * 4.0 Although everything seems working we’ve created a bug here, as by logging in or by signing out the redirection will be triggered only by second click on the button and not instantly as awaited. And if we do the hard refresh we’ll be also will be redirected back to the login page. And the problem is with timing. As we are relying on the 'onAuthStateChange' callback in order to trigger the setAuth and update the store value.
+    // Go to [src\router\index.ts]
     supabase.auth.onAuthStateChange((event, session) => {
       setTimeout(async () => {
         await setAuth(session)

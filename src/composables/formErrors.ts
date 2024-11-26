@@ -1,26 +1,47 @@
-// * 7.0 Let’s try to extract a stateful code using Composition API. Let’s see how we can extract the logic for auth server errors to a place where we can reuse it with any other form in the App. This is where composables are really helpful. First we’ll create a new directory 'src/composables' and inside of it a new file 'formErrors.ts'.
-// 7.1 The composable is like a normal func but we prefix it as a naming convention with 'use'. And whatever goes inside of this composable we can use Composition API, can create nested methods and any else.
-// 7.2 When we’re done we can return any data we want to reach out from the outside of the composable.
-// Go to [src\pages\login.vue]
-
+import type { LoginForm } from '@/types/AuthForm'
 import type { AuthError } from '@supabase/supabase-js'
 
-// 7.3 But we’ll rename it to serverError and then create another func handleServerError and it should accept the error from Supabase with the type AuthError and it will have only one task to update serverError variable ref with with the error we got here inside of the composable.
-// Go to [src\pages\login.vue]
-// 7.5 And then we’ll want to return the serverError variable ref. And by returning reactive state from a composable like this we will be able using this reactive state anywhere we want w.o. loosing its reactivity.
-// 7.6 Also we want to return handleServerError method, because that’s what we’re going to use outside of the composable to update the reactive state serverError.
-// 7.7 And not to forget to export the composable and then it will be ready to be used.
-// Go to [src\pages\login.vue]
 export const useFormErrors = () => {
   const serverError = ref('')
+  // 1.1.0 We’ll also need a new variable ref 'realtimeErrors' and we want this ref to adapt to whatever the func that we’ll call it from. For example if we call it from handLoginForm func it should have an object with the properties 'email' & 'password'. Those are the properties of the login form and if we’ll use it for register form there will be properties for the register form.
+  const realtimeErrors = ref()
 
   const handleServerError = (error: AuthError) => {
     serverError.value =
       error.message === 'Invalid login credentials' ? 'Incorrect email or password' : error.message
   }
 
+  // * 1.0 Let’s handle now the real-time validation as the user is using the input. And for that we’ll create here a new func 'handLoginForm'. It will receive the formData with the type LoginForm.
+  const handleLoginForm = async (formData: LoginForm) => {
+    // 1.1.1 So we don’t want explicitly set the type here, we want to set it when we use it. So we will user realtimeErrors.value here and set it to this object.
+    // 1.2 Actually we don’t need the properties of that object to be string, we want them to be arrays. Because we want to have the ability to display or render diff. errors per input.
+    // 1.3 Now we need to create funcs to validate email & password and push the whatever errors comes out of the validation rules that we create to that corresponding array. But we won’t do that here, as it will make our composable so crowded. Let’s create a new file 'formValidations.ts' in the 'utils' directory for that.
+    // Go to [src\utils\formValidations.ts]
+    realtimeErrors.value = {
+      email: [],
+      password: []
+    }
+
+    // 1.13 Now we’ll import those new validation funcs dynamically inside of this func. Because we might not need them in any other function inside this file. And we’ll destruct "validateEmail", "validatePassword".
+    const { validateEmail, validatePassword } = await import('@/utils/formValidations')
+
+    // 1.14 Create a new constant 'emailErrors' and use the imported func and it will accept formData.email.
+    const emailErrors = validateEmail(formData.email)
+
+    // 1.15 Then we write a conditional that if the validation func returns any errors we’ll update the state that we have, which is realtimeErrors variable ref. Then we’ll update the property with the errors we got.
+    if (emailErrors.length) realtimeErrors.value.email = emailErrors
+
+    // 1.16 And we’ll do the same for the password.
+    const passwordErrors = validatePassword(formData.password)
+    if (passwordErrors.length) realtimeErrors.value.password = passwordErrors
+  }
+
+  // 1.17 Not to forget returning realtimeErrors & handleLoginForm.
+  // Go to [src\pages\login.vue]
   return {
     serverError,
-    handleServerError
+    handleServerError,
+    realtimeErrors,
+    handleLoginForm
   }
 }

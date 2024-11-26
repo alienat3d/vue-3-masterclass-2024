@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts", "database/types.ts", "auto-imports.d.ts", "components.d.ts", "comments/17-setup-the-auth-pt5/SidebarLinks copy.vue", "comments/17-setup-the-auth-pt5/Sidebar copy.vue", "comments/17-setup-the-auth-pt5/AuthLayout copy.vue"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts", "database/types.ts", "auto-imports.d.ts", "components.d.ts"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,

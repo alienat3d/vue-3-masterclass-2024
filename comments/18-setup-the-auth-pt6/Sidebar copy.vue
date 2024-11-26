@@ -1,3 +1,4 @@
+<!-- [src\components\Layout\Sidebar.vue] -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 const links = [
@@ -35,11 +36,14 @@ const accountLinks = [
   }
 ]
 
+// 2.7 And here we’ll use the router composable.
 const router = useRouter()
 
+// 2.8 Then here we’ll assign the call of logout to a new constant 'isLoggedOut' and then create a check if isLoggedOut returns 'true' then router push to the login page.
 const executeAction = async (linkTitle: string) => {
   if (linkTitle === 'Sign Out') {
     const { logout } = await import('@/utils/supabaseAuth')
+    // await logout()
     const isLoggedOut = await logout()
 
     if (isLoggedOut) router.push('/login')
