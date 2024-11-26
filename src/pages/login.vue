@@ -1,6 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { login } from '@/utils/supabaseAuth'
+// 2.1 For our needs let’s import 'watchDebounced' (also as alias we can use 'debouncedWatch').
+import { watchDebounced } from '@vueuse/core'
 
 const formData = ref({ email: '', password: '' })
 
@@ -8,6 +10,21 @@ const formData = ref({ email: '', password: '' })
 const { serverError, handleServerError, realtimeErrors, handleLoginForm } = useFormErrors()
 
 const router = useRouter()
+
+// 2.2 It will work as the normal watch and accepts for first argument whatever we want to watch and let’s pass the formData to it. The second one will be a callback which will trigger anything we write inside whenever any changes happen to formData. And then it also has third special argument "debounce option", which allow us to control how long we’re going to wait for the callback logic is triggered. There is also 'deep' option, which also available in normal watch in Vue JS, if set to true we make sure that we’re tracking all the changes that will happen nested in the formData object.
+// 2.3 And in the callback we want to trigger handleLoginForm func. ↓
+// 2.5 And here is what will happen here: watchDebounced starting watching for formData and when the user makes any changes watchDebounced will wait for 1 sec and if the user didn’t interact in 1 sec it will trigger the callback.
+// Go to [src\utils\formValidations.ts]
+watchDebounced(
+  formData,
+  () => {
+    handleLoginForm(formData.value)
+  },
+  {
+    debounce: 1000,
+    deep: true
+  }
+)
 
 const signin = async () => {
   const { error } = await login(formData.value)
@@ -34,16 +51,18 @@ const signin = async () => {
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
             <!-- 1.22 As for handleLoginForm we can listen to the user as he start of using input. So we need 'input' event listener and pass to it this func with the 'formData'. -->
-            <!-- * 2.0 For better UX we want that handleLoginForm func triggering only after the user stops typing in, so that our script won’t attack him with the errors as he just starts of typing. That’s the perfect spot for Debouncing. It’s a technique to control how often a func runs in a response to user interaction. And instead of handling this manually and implementing this all over again using JS, we can get a help from external package. Let’s install first the package using following command: 'npm i @vueuse/core'. This package includes a lot of composable we can use and save a lot of time like with Debounce now. -->
+            <!-- * 2.0 For better UX we want that handleLoginForm func triggering only after the user stops typing in, so that our script won’t attack him with the errors as he just starts of typing. That’s the perfect spot for Debouncing. It’s a technique to control how often a func runs in a response to user interaction. And instead of handling this manually and implementing this all over again using JS, we can get a help from external package. Let’s install first the package using following command: 'npm i @vueuse/core'. This package includes a lot of composable we can use and save a lot of time like with Debounce now. ↑ -->
+            <!-- 2.4 Now we can remove it from the template as we don’t need it anymore* -->
             <Input
               type="email"
               placeholder="johndoe19@example.com"
               required
               v-model="formData.email"
               :class="{ 'border-red-500': serverError }"
-              @input="handleLoginForm(formData)"
             />
+            <!-- *[2.4] @input="handleLoginForm(formData)" ↑ -->
             <!-- 1.21 And let’s past the same HTML block for the email as we did for password already. -->
+            <!-- ? 2.8 We could also extract this errors HTML block to reusable component and make errors look more fancy. -->
             <ul v-if="realtimeErrors?.email.length" class="text-sm text-left text-red-500">
               <li v-for="error in realtimeErrors.email" :key="error" class="list-disc">
                 {{ error }}

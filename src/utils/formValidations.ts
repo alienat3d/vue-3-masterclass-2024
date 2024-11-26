@@ -25,6 +25,7 @@ export const validateEmail = (email: string) => {
 // 1.11 Then same as above we’ll have an empty array for the errors.
 // 1.12 And let’s make at least one validation to make sure the password is not shorter than 6 letters, so that raises the security of the user account. And we’ll push the notice to the errors array if typed in password is shorter.
 // Go to [src\composables\formErrors.ts]
+// 2.6 But we also should be able to show diff. errors for the same input
 export const validatePassword = (password: string) => {
   if (!password) return []
 
@@ -32,6 +33,9 @@ export const validatePassword = (password: string) => {
 
   if (password.length <= 6) errors.push('Password must be more than 6 characters')
 
+  // 2.7 Just for the testing two lines errors.
+  // Go to [src\pages\login.vue]
+  // if (!password.includes('@')) errors.push('Password must include special characters')
   // ...any other validation rules here...
 
   return errors
