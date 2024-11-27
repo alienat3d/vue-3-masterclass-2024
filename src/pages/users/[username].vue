@@ -26,7 +26,6 @@ const getTasks = async () => {
 
 await getTasks()
 </script>
-
 <!-- 1.2 So now, when we have all the data let’s render it to HTML. -->
 <template>
   <div class="mx-auto mb-10 flex w-full flex-col items-center justify-center py-10 text-center">
