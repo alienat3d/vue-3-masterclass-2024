@@ -30,6 +30,7 @@ const router = createRouter({
       // 3.2 Instead of creating 404 page component we could use "h" from Vue, which means HyperScript, which means JS that produces HTML and then we write inside of it 'p' as first argument for a type of HTML tag and then it goes second argument for object, where we put the attributes of that HTML-element inside. Then for third argument it goes the text content we want to put inside of this element.
       // ? 3.3 Оf course it’s not a proper way to handle 404 pages. But just as an example. (meaning h())
       // ? 3.4 Also, if we would modify path to '/projects:catchAll(.*)*', for example, then we can provide a custom 404 page for undefined routes nested under projects.
+      // ? 3.4.1 It also not supposed to be that much generic, we also could specify a little more by writing "/projects:catchAll(.*)*" and this way we can provide a custom 404 page for undefined routes nested under projects.
       path: '/:catchAll(.*)*',
       name: 'NotFound',
       component: h(
